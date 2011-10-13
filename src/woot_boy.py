@@ -40,12 +40,14 @@ class WootFrame(wxFrame):
     def __init__(self,parent,ID,title):
         wxFrame.__init__(self,parent,ID,title,wxDefaultPosition,wxSize(200,150))
         menu = wxMenu()
-        menu.Append(100,"&Popup","Popup")
+        menu.Append(100,"&Start","Start")
+        menu.Append(101,"S&top","Stop")
         menuBar = wxMenuBar()
         menuBar.Append(menu,"&File")
         self.SetMenuBar(menuBar)
 
         EVT_MENU(self,100,self.PopupAction)
+        EVT_MENU(self,101,self.Stop)
 
     def getThreshold(self,progress):
         
@@ -64,7 +66,10 @@ class WootFrame(wxFrame):
         else:
             return 1
 
-        
+
+    def Stop(self,event): 
+        self.timer.Stop()   
+            
     def PopupAction(self,event):
 
         
