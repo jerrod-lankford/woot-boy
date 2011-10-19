@@ -1,8 +1,8 @@
-Woot Boy:
+#Woot Boy
 
 Woot Boy is a server friendly, instant notifier for woot-offs. Notifications are displayed popup style in the corner of the window. It tries its best to keep a load off the server while still instantly notifying you of new items as they come up.
 
-FAQ:
+##FAQ
 
 What is with the name woot boy?
 I accidently hit the 'y' instead of the 't' and I didn't feel like changing it.
@@ -30,7 +30,7 @@ pyton woot-boy.py
 
 The gui is currently blank, im just using the frame for toaster box purposes but there is a menu dropdown that will let you start and stop the bot.
 
-TODOS:
+##TODOS:
 
 Add a quick item check (some items sell out ~1 minute)
 Fix some bugs with item switchovers
