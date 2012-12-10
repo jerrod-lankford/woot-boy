@@ -13,6 +13,7 @@ import wx.lib.hyperlink as hyperlink
 from wx.lib.ticker import Ticker
 import threading
 import time
+from WootIcon import WootIcon
 
 ###################################################
 #Get the progress from the div, assuming the format stays at:
@@ -32,23 +33,21 @@ class WootBoy(wxApp):
         
     def OnInit(self):
         frame = WootFrame(NULL,-1,"Woot Boy")
-        frame.Show(true)
+        frame.Show(False)
         self.SetTopWindow(frame)
         return true
 
 class WootFrame(wxFrame):
     def __init__(self,parent,ID,title):
         wxFrame.__init__(self,parent,ID,title,wxDefaultPosition,wxSize(200,150))
-        menu = wxMenu()
-        menu.Append(100,"&Start","Start")
-        menu.Append(101,"S&top","Stop")
-        menuBar = wxMenuBar()
-        menuBar.Append(menu,"&File")
-        self.SetMenuBar(menuBar)
-
-        EVT_MENU(self,100,self.PopupAction)
-        EVT_MENU(self,101,self.Stop)
-
+        self.tbIcon = WootIcon(self)
+        self.Bind(wx.EVT_CLOSE,self.onClose)
+        
+    def onClose(self,evt):
+        self.tbIcon.RemoveIcon()
+        self.tbIcon.Destroy()
+        self.Destroy()
+        
     def getThreshold(self,progress):
         
         if progress > 75:
@@ -105,21 +104,11 @@ class WootFrame(wxFrame):
         if name not in self.oldName:
             amount = getAmount(soup)
             downloadImage(soup)
-            link = ""
 
             soup = BeautifulSoup(html)
-            links = soup.findAll("a")
-
-            #Todo: Play with beautiful soup and find a better way to get the link
-            for a in links:
-                if a is not None and a.string is not None:
-                     if a.string.find("I Want One!") != -1:
-                         #TODO: Fix this horrible horrible code
-                        try:
-                            link = a['href']
-                        except:
-                            self.timeout = 1;
-                            pass
+            
+            link = getWantOneLink(soup)
+            
             ##############################################
             self.showPopup(name,amount,progress,link)           
             self.oldName = name
@@ -127,6 +116,8 @@ class WootFrame(wxFrame):
                 
     
     def showPopup(self,name,price,progress,link):
+
+        res = wx.GetDisplaySize()
         
         #############################################
         bWidth = 200
@@ -134,7 +125,7 @@ class WootFrame(wxFrame):
         tb = TB.ToasterBox(self, TB.TB_COMPLEX, TB.TB_DEFAULT_STYLE, TB.TB_ONTIME)
 
         tb.SetPopupSize((bWidth,bHeight))
-        tb.SetPopupPosition((1680-bWidth,1050-bHeight))
+        tb.SetPopupPosition((res[0]-bWidth,res[1]-bHeight))
         
         tb.SetPopupPauseTime(6000)
         tb.SetPopupScrollSpeed(8)
@@ -149,13 +140,17 @@ class WootFrame(wxFrame):
         sizer = wxBoxSizer(wxVERTICAL)
         horsizer1 = wxBoxSizer(wxHORIZONTAL)
 
-        bmp = wx.Bitmap("conf/temp.jpg",wx.BITMAP_TYPE_JPEG)
-        image = wx.ImageFromBitmap(bmp)
-        image = image.Scale(50,50,wx.IMAGE_QUALITY_HIGH)
-        bmp = wx.BitmapFromImage(image)
-        stbmp = wxStaticBitmap(panel, -1, bmp)
-        horsizer1.Add(stbmp, 0)
-        strs = str(name) + " - " +  "$" + str(price) + "\n"
+        try:
+            bmp = wx.Bitmap("conf/temp.jpg",wx.BITMAP_TYPE_ANY)
+            image = wx.ImageFromBitmap(bmp)
+            image = image.Scale(50,50,wx.IMAGE_QUALITY_HIGH)
+            bmp = wx.BitmapFromImage(image)
+            stbmp = wxStaticBitmap(panel, -1, bmp)
+            horsizer1.Add(stbmp, 0)
+
+        except:
+            print "cannot display image"
+        strs = str(name) + " - " + str(price) + "\n"
         
         sttext = wxStaticText(panel, -1, strs)
         sttext.SetFont(wxFont(7, wxSWISS, wxNORMAL, wxNORMAL, False, "Verdana"))

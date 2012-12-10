@@ -1,13 +1,12 @@
 import urllib
 from BeautifulSoup import BeautifulSoup
 def findProgress(soup):
-    test = soup.find("div", {"class" : "wootOffProgressBarValue"})
-    if test == None:
+    #print soup.prettify()
+    test = soup.find("div", {"class" : "percent-remaining"})
+    if test == None or test.string == "Sold Out":
         return -1
-    if test.has_key('style'):
-        return test['style'].partition(":")[2].replace('%','')
-    else:
-        return -1
+    return test.string.replace("% left","")
+
 def getName(soup):
     tag = soup.find("h2",{"class" : "fn"})
     soup.find()
@@ -17,7 +16,7 @@ def getName(soup):
         return str(tag.string)
 
 def getAmount(soup):
-    tag = soup.find("span",{"class" : "amount"})
+    tag = soup.find("span",{"class" : "price"})
     if tag == None or tag.string == None:
         return None
     else:
@@ -27,3 +26,11 @@ def downloadImage(soup):
     img = soup.find("img",{"class" : "photo"})
     if img.has_key('src'):
         urllib.urlretrieve(img['src'],"conf/temp.jpg")
+
+#link is relative
+def getWantOneLink(soup):
+    linkNode = soup.find("a", {"class" : "wantone  "})
+    if linkNode == None:
+        return ""
+    link = linkNode['href']
+    return "www.woot.com" + link
