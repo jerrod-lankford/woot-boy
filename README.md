@@ -35,11 +35,17 @@ The gui is currently blank, im just using the frame for toaster box purposes but
 -Add a quick item check (some items sell out ~1 minute)
 
 -Fix some bugs with item switchovers
+
 -Write a gui
+
 -Make it fully configurable.
+
 -Add a systray icon
+
 -Crashes because the image is a png or gif (Still throws error but doesnt crash)
+
 -Crashes during lunch sale (Crashes due to the format of the percentage
+
 -Make resolution detection automatic (Done)
 
 
