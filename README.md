@@ -36,17 +36,5 @@ Updated some of the parsing since woot changed their layout. Still in the proces
 
 -Add a quick item check
 
--Fix some bugs with item switchovers (Done)
-
--Write a gui (Not doing)
-
--Make it fully configurable. (Not doing)
-
--Add a systray icon (Done)
-
--Crashes because the image is a png or gif (Done)
-
 -Crashes during lunch sale (Crashes due to the format of the percentage)
-
--Make resolution detection automatic (Done)
 
