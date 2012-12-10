@@ -33,6 +33,7 @@ The gui is currently blank, im just using the frame for toaster box purposes but
 ##TODOS:
 
 -Add a quick item check (some items sell out ~1 minute)
+
 -Fix some bugs with item switchovers
 -Write a gui
 -Make it fully configurable.
