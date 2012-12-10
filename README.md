@@ -28,15 +28,13 @@ Then just run it!
 
 pyton woot-boy.py
 
-The gui is currently blank, im just using the frame for toaster box purposes but there is a menu dropdown that will let you start and stop the bot.
+UPDATE:
 
+Finally got around to working on this again. Added a system tray icon and removed the blank window. You can start and stop the bot from the system tray icon.
+Updated some of the parsing since woot changed their layout. Still in the process of working out a few kinks. Occasionally throws an error due to changing image formats.
 ##TODOS:
 
--Add a quick item check (some items sell out ~1 minute)
--Fix some bugs with item switchovers
--Write a gui
--Make it fully configurable.
--Add a systray icon
--Crashes during the lunch shirt sale because the image is a gif
+-Add a quick item check
 
+-Crashes during lunch sale (Crashes due to the format of the percentage)
 
