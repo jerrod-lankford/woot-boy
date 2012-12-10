@@ -143,13 +143,14 @@ class WootFrame(wxFrame):
         try:
             bmp = wx.Bitmap("conf/temp.jpg",wx.BITMAP_TYPE_ANY)
             image = wx.ImageFromBitmap(bmp)
-            image = image.Scale(50,50,wx.IMAGE_QUALITY_HIGH)
+            height = int((75 / float(image.GetWidth())) * image.GetHeight())
+            image = image.Scale(75,height,wx.IMAGE_QUALITY_HIGH)
             bmp = wx.BitmapFromImage(image)
             stbmp = wxStaticBitmap(panel, -1, bmp)
             horsizer1.Add(stbmp, 0)
-
         except:
             print "cannot display image"
+            
         strs = str(name) + " - " + str(price) + "\n"
         
         sttext = wxStaticText(panel, -1, strs)
@@ -159,13 +160,13 @@ class WootFrame(wxFrame):
         hl = hyperlink.HyperLinkCtrl(panel, -1, "Buy Now!",
                                      URL=link)
 
-        sizer.Add((0,5))        
-        sizer.Add(horsizer1, 0, wxEXPAND)
+        sizer.Add((0,6))        
+        sizer.Add(horsizer1, 2, wxEXPAND)
 
         horsizer2 = wxBoxSizer(wxHORIZONTAL)
         horsizer2.Add((5, 0))
         horsizer2.Add(hl, 0, wxEXPAND | wxTOP, 10)
-        sizer.Add(horsizer2, 0, wxEXPAND)
+        sizer.Add(horsizer2, 1, wxEXPAND)
 
         sizer.Layout()
         panel.SetSizer(sizer)
