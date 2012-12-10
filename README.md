@@ -34,19 +34,19 @@ Finally got around to working on this again. Added a system tray icon and remove
 Updated some of the parsing since woot changed their layout. Still in the process of working out a few kinks. Occasionally throws an error due to changing image formats.
 ##TODOS:
 
--Add a quick item check (some items sell out ~1 minute)
+-Add a quick item check
 
--Fix some bugs with item switchovers
+-Fix some bugs with item switchovers (Done)
 
--Write a gui
+-Write a gui (Not doing)
 
--Make it fully configurable.
+-Make it fully configurable. (Not doing)
 
--Add a systray icon
+-Add a systray icon (Done)
 
--Crashes because the image is a png or gif (Still throws error but doesnt crash)
+-Crashes because the image is a png or gif (Done)
 
--Crashes during lunch sale (Crashes due to the format of the percentage
+-Crashes during lunch sale (Crashes due to the format of the percentage)
 
 -Make resolution detection automatic (Done)
 
