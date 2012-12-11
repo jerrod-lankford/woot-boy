@@ -14,6 +14,7 @@ from wx.lib.ticker import Ticker
 import threading
 import time
 from WootIcon import WootIcon
+import logging
 
 ###################################################
 #Get the progress from the div, assuming the format stays at:
@@ -35,6 +36,8 @@ class WootBoy(wxApp):
         frame = WootFrame(NULL,-1,"Woot Boy")
         frame.Show(False)
         self.SetTopWindow(frame)
+        logging.basicConfig(filename="wootboy.log", format='%(asctime)s %(message)s',datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
+        
         return true
 
 class WootFrame(wxFrame):
@@ -102,6 +105,7 @@ class WootFrame(wxFrame):
         print str(progress) + " " + str(self.timeout)
         print "Comparing: " + self.oldName + " : " + name 
         if name not in self.oldName:
+            logging.debug("Discovered \"%s\" at %s%%" % (name,progress))
             amount = getAmount(soup)
             downloadImage(soup)
 
