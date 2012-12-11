@@ -87,7 +87,7 @@ class WootFrame(wxFrame):
             
         urlhandle = urllib2.urlopen(self.url)
         html = urlhandle.read()
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES)
         progress = findProgress(soup)
         name = fixName(getName(soup))
         
