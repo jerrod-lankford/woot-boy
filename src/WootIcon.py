@@ -17,21 +17,37 @@ class WootIcon(wx.TaskBarIcon):
         self.tbIcon = icon
         self.SetIcon(self.tbIcon,"Woot Boy")
 
+        self.menu = self.CreateMenu()
+
     def OnTaskBarActivate(self, evt):
         pass
 
     def OnTaskBarClose(self,evt):
         self.frame.Close()
 
-    def CreatePopupMenu(self):
+    def CreateMenu(self):
+        checkMenu = wx.Menu()
+        checkMenu.AppendCheckItem(201,"Woot!")
+        checkMenu.AppendCheckItem(202,"Home")
+        checkMenu.AppendCheckItem(203,"Sport")
+        checkMenu.AppendCheckItem(204,"Kids")
+        checkMenu.AppendCheckItem(205,"Wine")
+        
         menu = wx.Menu()
         menu.Append(100,"&Start","Start")
         menu.Append(101,"S&top","Stop")
+        menu.AppendMenu(200,"Woots",checkMenu)
         menu.Append(102,"&Close","Close")
         EVT_MENU(self,100,self.frame.PopupAction)
         EVT_MENU(self,101,self.frame.Stop)
         EVT_MENU(self,102,self.frame.onClose)
-        self.PopupMenu(menu)
-        menu.Destroy()
+
+        return menu
+        
+    def CreatePopupMenu(self):
+        
+        self.PopupMenu(self.menu)
+        #menu.Destroy()
+        #checkMenu.destroy()
         
 
