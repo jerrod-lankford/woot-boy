@@ -37,6 +37,7 @@ class WootIcon(wx.TaskBarIcon):
 
     def CreateMenu(self):
         checkMenu = wx.Menu()
+
         checkMenu.AppendCheckItem(WOOT_IDS[0],"Woot!").Check(True)
         checkMenu.AppendCheckItem(WOOT_IDS[1],"Home")
         checkMenu.AppendCheckItem(WOOT_IDS[2],"Sport")
@@ -46,6 +47,7 @@ class WootIcon(wx.TaskBarIcon):
         menu = wx.Menu()
         menu.Append(ID_START,"&Start","Start")
         menu.Append(ID_STOP,"S&top","Stop").Enable(False)
+
         menu.AppendMenu(200,"Woots",checkMenu)
         menu.Append(ID_CLOSE,"&Close","Close")
         EVT_MENU(self,ID_START,self.start)
