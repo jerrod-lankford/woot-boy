@@ -1,11 +1,4 @@
-import urllib2
 import sys
-import subprocess
-import urllib
-from BeautifulSoup import BeautifulSoup
-from WootConfig import WootConfig
-from ConfigParser import ConfigParser
-from ScrapHelper import *
 import wx
 import wx.lib.agw.toasterbox as TB
 from wxPython.wx import *
@@ -14,20 +7,13 @@ from wx.lib.ticker import Ticker
 import threading
 import time
 from WootIcon import WootIcon
-import logging
+
 
 ###################################################
 #Get the progress from the div, assuming the format stays at:
 # <div class="wootOffProgressBarValue" style="width: 34%;"></div>
 # then this script should continue to work.
 ###################################################
-#Crashes if ascii is greater than 127, so strip those out
-def fixName(name):
-    final = ""
-    for a in range(0,len(name)):
-        if ord(name[a]) <= 127:
-            final+= name[a]
-    return final
     
 class WootBoy(wxApp):
     
@@ -36,7 +22,6 @@ class WootBoy(wxApp):
         frame = WootFrame(NULL,-1,"Woot Boy")
         frame.Show(False)
         self.SetTopWindow(frame)
-        logging.basicConfig(filename="wootboy.log", format='%(asctime)s %(message)s',datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
         
         return true
 
@@ -49,77 +34,9 @@ class WootFrame(wxFrame):
     def onClose(self,evt):
         self.tbIcon.RemoveIcon()
         self.tbIcon.Destroy()
-        self.Destroy()
-        
-    def getThreshold(self,progress):
-        
-        if progress > 75:
-            return 260
-        elif progress > 50:
-            return 180
-        elif progress > 25:
-            return 120
-        elif progress > 10:
-            return 50
-        elif progress > 5:
-            return 20
-        elif progress > 2:
-            return 5
-        else:
-            return 1
-
-
-    def Stop(self,event): 
-        self.timer.Stop()   
-            
-    def PopupAction(self,event):
-
-        
-        self.timer = wxTimer(self)
-        self.Bind(wx.EVT_TIMER,self.run,self.timer)
-        
-        self.timeout = 1000
-        self.timer.Start(self.timeout)
-        
-        self.oldName = ""
-        self.url = "http://www.woot.com"
-        
-    def run(self,event):
-        #event = threading.Event()
-        
-            
-        urlhandle = urllib2.urlopen(self.url)
-        html = urlhandle.read()
-        soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES)
-        progress = findProgress(soup)
-        name = fixName(getName(soup))
-        
-        newTimeout = self.getThreshold(int(progress))
-        
-        if (newTimeout < self.timeout):
-            self.timeout = self.getThreshold(int(progress))
-        #self.timer.Stop()
-        #print "Timeout: " + str(self.timeout)
-        self.timer.Start(self.timeout * 1000)
-        
-        print str(progress) + " " + str(self.timeout)
-        print "Comparing: " + self.oldName + " : " + name 
-        if name not in self.oldName:
-            logging.debug("Discovered \"%s\" at %s%%" % (name,progress))
-            amount = getAmount(soup)
-            downloadImage(soup)
-
-            soup = BeautifulSoup(html)
-            
-            link = getWantOneLink(soup)
-            
-            ##############################################
-            self.showPopup(name,amount,progress,link)           
-            self.oldName = name
-            self.timeout = self.getThreshold(100)
-                
+        self.Destroy()            
     
-    def showPopup(self,name,price,progress,link):
+    def showPopup(self,name,price,progress,link,tid):
 
         res = wx.GetDisplaySize()
         
@@ -145,7 +62,7 @@ class WootFrame(wxFrame):
         horsizer1 = wxBoxSizer(wxHORIZONTAL)
 
         try:
-            bmp = wx.Bitmap("conf/temp.jpg",wx.BITMAP_TYPE_ANY)
+            bmp = wx.Bitmap("conf/temp"+str(tid)+".jpg",wx.BITMAP_TYPE_ANY)
             image = wx.ImageFromBitmap(bmp)
             height = int((75 / float(image.GetWidth())) * image.GetHeight())
             image = image.Scale(75,height,wx.IMAGE_QUALITY_HIGH)
@@ -192,14 +109,4 @@ class WootFrame(wxFrame):
 app = WootBoy(0)
 app.MainLoop()
 
-#print "Item: " + name + " - " + amount + ". Progress:" + str(progress)
-#print "Link: " + link
-#app = wx.PySimpleApp()
-#frame = ToasterBoxDemo(None)
-#frame.Show()
-#app.MainLoop()
-
-parse = WootConfig()
-parse.read("config.ini")
-parse.init()
 

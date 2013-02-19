@@ -22,10 +22,10 @@ def getAmount(soup):
     else:
         return str(tag.string)
 
-def downloadImage(soup):
+def downloadImage(soup,tid):
     img = soup.find("img",{"class" : "photo"})
     if img.has_key('src'):
-        urllib.urlretrieve(img['src'],"conf/temp.jpg")
+        urllib.urlretrieve(img['src'],"conf/temp" + str(tid) + ".jpg")
 
 #link is relative
 def getWantOneLink(soup):

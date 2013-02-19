@@ -1,8 +1,18 @@
 import wx
 from wxPython.wx import *
 from wx import EmptyIcon
+from WootScrap import WootScrap
 
-    
+#Menu ids
+ID_START = 100
+ID_STOP = 101
+ID_CLOSE = 102
+
+#Woot menu check items
+WOOT_IDS = [201,202,203,204,205]
+urls = ["http://www.woot.com","http://home.woot.com","http://sport.woot.com","http://kids.woot.com","http://wine.woot.com"]
+timers = []
+
 class WootIcon(wx.TaskBarIcon):
 
     def __init__(self,frame):
@@ -27,20 +37,20 @@ class WootIcon(wx.TaskBarIcon):
 
     def CreateMenu(self):
         checkMenu = wx.Menu()
-        checkMenu.AppendCheckItem(201,"Woot!")
-        checkMenu.AppendCheckItem(202,"Home")
-        checkMenu.AppendCheckItem(203,"Sport")
-        checkMenu.AppendCheckItem(204,"Kids")
-        checkMenu.AppendCheckItem(205,"Wine")
+        checkMenu.AppendCheckItem(WOOT_IDS[0],"Woot!").Check(True)
+        checkMenu.AppendCheckItem(WOOT_IDS[1],"Home")
+        checkMenu.AppendCheckItem(WOOT_IDS[2],"Sport")
+        checkMenu.AppendCheckItem(WOOT_IDS[3],"Kids")
+        checkMenu.AppendCheckItem(WOOT_IDS[4],"Wine")
         
         menu = wx.Menu()
-        menu.Append(100,"&Start","Start")
-        menu.Append(101,"S&top","Stop")
+        menu.Append(ID_START,"&Start","Start")
+        menu.Append(ID_STOP,"S&top","Stop").Enable(False)
         menu.AppendMenu(200,"Woots",checkMenu)
-        menu.Append(102,"&Close","Close")
-        EVT_MENU(self,100,self.frame.PopupAction)
-        EVT_MENU(self,101,self.frame.Stop)
-        EVT_MENU(self,102,self.frame.onClose)
+        menu.Append(ID_CLOSE,"&Close","Close")
+        EVT_MENU(self,ID_START,self.start)
+        EVT_MENU(self,ID_STOP,self.stop)
+        EVT_MENU(self,ID_CLOSE,self.frame.onClose)
 
         return menu
         
@@ -49,5 +59,40 @@ class WootIcon(wx.TaskBarIcon):
         self.PopupMenu(self.menu)
         #menu.Destroy()
         #checkMenu.destroy()
+
+    def start(self,event):
+        startItem = self.menu.FindItemById(ID_START)
+        stopItem = self.menu.FindItemById(ID_STOP)
+        startItem.Enable(False);
+        stopItem.Enable(True);
+
+        #Disable woot selection
+        for a in range(0,5):
+            item = self.menu.FindItemById(WOOT_IDS[a])
+            item.Enable(False)
+            if item.IsChecked():
+                #pass in the thread id to get rid of race condition for temp.jpg
+                ws = WootScrap(urls[a],self.frame,a)
+                ws.start()
+                timers.append(ws)
+
+        
+
+    def stop(self,event):
+        startItem = self.menu.FindItemById(ID_START)
+        stopItem = self.menu.FindItemById(ID_STOP)
+        startItem.Enable(True);
+        stopItem.Enable(False);
+
+        #Enable woot selection
+        for a in range(0,5):
+            item = self.menu.FindItemById(WOOT_IDS[a])
+            item.Enable(True)
+
+        #Stop all timers and clear list
+        for b in timers:
+            b.stop()
+
+        del timers[:]
         
 
