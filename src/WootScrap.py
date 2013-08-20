@@ -33,8 +33,10 @@ class WootScrap:
         urlhandle = urllib2.urlopen(self.url)
         html = urlhandle.read()
         soup = BeautifulSoup(html, convertEntities=BeautifulSoup.HTML_ENTITIES)
-        progress = findProgress(soup)
-        name = self.fixName(getName(soup))
+        body = soup.find("div",{"id":"content"});
+        
+        progress = findProgress(body)
+        name = self.fixName(getName(body))
         
         newTimeout = self.getThreshold(int(progress))
         
@@ -48,12 +50,9 @@ class WootScrap:
         print "Comparing: " + self.oldName + " : " + name 
         if name not in self.oldName:
             logging.debug("Discovered \"%s\" at %s%%" % (name,progress))
-            amount = getAmount(soup)
-            downloadImage(soup,self.tid)
-
-            soup = BeautifulSoup(html)
-            
-            link = getWantOneLink(soup)
+            amount = getAmount(body)
+            downloadImage(body,self.tid)
+            link = getWantOneLink(body)
             
             ##############################################
             self.frame.showPopup(name,amount,progress,link,self.tid)           
